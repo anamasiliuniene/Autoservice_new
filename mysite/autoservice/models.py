@@ -1,14 +1,17 @@
 from django.db import models
 
+
 # Create your models here.
 class Car(models.Model):
     make = models.CharField()
     model = models.CharField()
     license_plate = models.CharField()
+    vin_code = models.CharField("VIN", max_length=17, unique=True, default="UNKNOWNVIN00000000")
     client_name = models.CharField()
 
     def __str__(self):
         return f"{self.license_plate} ({self.make})"
+
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -24,5 +27,23 @@ class Order(models.Model):
         choices=STATUS_CHOICES,
         default="open"
     )
+
     def __str__(self):
         return f" {self.car} - ({self.date:%Y-%m-%d}) - {self.status}"
+
+
+class Service(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=7, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.name} ({self.price} €)"
+
+class OrderLine(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="lines")
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+
+    def __str__(self):
+        return f"{self.service} x {self.quantity}"
