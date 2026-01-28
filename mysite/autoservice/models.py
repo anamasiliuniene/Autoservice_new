@@ -9,8 +9,12 @@ class Car(models.Model):
     vin_code = models.CharField("VIN", max_length=17, unique=True, default="UNKNOWNVIN00000000")
     client_name = models.CharField()
 
+    def short_name(self):
+        return f"{self.make} {self.model}"
+    short_name.short_description = "Car"
+
     def __str__(self):
-        return f"{self.license_plate} {self.model} ({self.make})"
+        return f"{self.make} {self.model} ({self.license_plate})"
 
     class Meta:
         verbose_name_plural = "Cars"
@@ -41,10 +45,10 @@ class Order(models.Model):
 
 class Service(models.Model):
     name = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=7, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=7, decimal_places=2)
 
     def __str__(self):
-        return f"{self.name} ({self.price} €)"
+        return f"{self.name} ({self.unit_price} €)"
 
     class Meta:
         verbose_name_plural = "Services"
@@ -57,8 +61,14 @@ class OrderLine(models.Model):
 
 
     def __str__(self):
-        return f"{self.service.name} - {self.quantity} ({self.service.price} € each)"
+        return f"{self.service.name} - {self.quantity} ({self.service.unit_price} €)"
 
     class Meta:
         verbose_name_plural = "Order Lines"
         verbose_name = "Order Line"
+
+    @property
+    def line_sum(self):
+        if self.service:
+            return self.quantity * self.service.unit_price
+        return 0
