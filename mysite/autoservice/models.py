@@ -10,7 +10,7 @@ class Car(models.Model):
     client_name = models.CharField()
 
     def __str__(self):
-        return f"{self.license_plate} ({self.make})"
+        return f"{self.license_plate} {self.model} ({self.make})"
 
 
 class Order(models.Model):
@@ -21,7 +21,7 @@ class Order(models.Model):
     ]
 
     date = models.DateTimeField(auto_now_add=True)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    car = models.ForeignKey(to = "Car", on_delete=models.SET_NULL, null=True, blank=True)
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
@@ -40,10 +40,10 @@ class Service(models.Model):
         return f"{self.name} ({self.price} €)"
 
 class OrderLine(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="lines")
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    order = models.ForeignKey(to = "Order", on_delete=models.CASCADE)
+    service = models.ForeignKey(to = "Service", on_delete=models.SET_NULL, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)
 
 
     def __str__(self):
-        return f"{self.service} x {self.quantity}"
+        return f"{self.service.name} - {self.quantity} ({self.service.price} € each)"
