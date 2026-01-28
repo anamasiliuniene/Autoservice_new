@@ -12,6 +12,9 @@ class Car(models.Model):
     def __str__(self):
         return f"{self.license_plate} {self.model} ({self.make})"
 
+    class Meta:
+        verbose_name_plural = "Cars"
+        verbose_name = "Car"
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -32,6 +35,9 @@ class Order(models.Model):
     def __str__(self):
         return f" {self.car} - ({self.date:%Y-%m-%d}) - {self.status}"
 
+    class Meta:
+        verbose_name_plural = "Orders"
+        verbose_name = "Order"
 
 class Service(models.Model):
     name = models.CharField(max_length=100)
@@ -39,6 +45,10 @@ class Service(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.price} €)"
+
+    class Meta:
+        verbose_name_plural = "Services"
+        verbose_name = "Service"
 
 class OrderLine(models.Model):
     order = models.ForeignKey(to = "Order", on_delete=models.CASCADE)
@@ -48,3 +58,7 @@ class OrderLine(models.Model):
 
     def __str__(self):
         return f"{self.service.name} - {self.quantity} ({self.service.price} € each)"
+
+    class Meta:
+        verbose_name_plural = "Order Lines"
+        verbose_name = "Order Line"
