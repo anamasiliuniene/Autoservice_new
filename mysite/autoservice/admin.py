@@ -27,7 +27,7 @@ class OrderLineInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['get_car', 'date', 'status']
     list_editable = ['status']
-    list_filter = ['status', 'date']
+    list_filter = ['status', 'date', 'car']
     search_fields = ['car__license_plate', 'car__client_name']
     inlines = [OrderLineInline]
 
