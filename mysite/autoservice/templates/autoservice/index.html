@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Autoservice</title>
-</head>
-<body>
-<h1>Welcome to the Autoservice Application</h1>
-<p>This is the main page of the Autoservice application.</p>
+{% extends "autoservice/base.html" %}
 
-</body>
-</html>
+{% block title%} STATS {% endblock %}
+
+{% block content %}
+<h1>Stats</h1>
+<p> Number of services: {{ num_services }}</p>
+<p> Number of cars registered: {{ num_cars }}</p>
+<p> Number of orders completed: {{ num_order_done }}</p>
+<p> Number of orders in progress: {{ num_order_in_progress }}</p>
+<p> Number of orders in queue: {{ num_order_open }}</p>
+{% endblock %}
