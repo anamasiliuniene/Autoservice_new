@@ -57,7 +57,7 @@ class OrderLineAdmin(admin.ModelAdmin):
 
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ("name", "unit_price", "total_quantity", "total_revenue")
-    search_fields = ("name",)  # <-- this is required for autocomplete
+    search_fields = ("name",)
 
     def total_quantity(self, obj):
         return sum(ol.quantity for ol in obj.orderline_set.all())
