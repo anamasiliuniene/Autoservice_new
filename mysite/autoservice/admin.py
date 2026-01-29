@@ -25,11 +25,12 @@ class OrderLineInline(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['get_car', 'date', 'status']
+    list_display = ['get_car', 'date', 'status', 'total_cost']
     list_editable = ['status']
     list_filter = ['status', 'date', 'car']
     search_fields = ['car__license_plate', 'car__client_name']
     inlines = [OrderLineInline]
+
 
     def get_car(self, obj):
         return obj.car.short_name() if obj.car else None

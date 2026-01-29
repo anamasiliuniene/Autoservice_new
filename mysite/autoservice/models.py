@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.expressions import result
 
 
 # Create your models here.
@@ -34,9 +35,14 @@ class Order(models.Model):
         choices=STATUS_CHOICES,
         default="open"
     )
+    def total_cost(self):
+        result = 0
+        for line in self.order_lines.all():
+            result += line.service.unit_price * line.quantity
+        return result
 
     def __str__(self):
-        return f" {self.car} - ({self.date:%Y-%m-%d}) - {self.status}"
+        return f" {self.car} - ({self.date:%Y-%m-%d}) - {self.status} - {self.total_cost()}"
 
     class Meta:
         verbose_name_plural = "Orders"
@@ -54,7 +60,7 @@ class Service(models.Model):
         verbose_name = "Service"
 
 class OrderLine(models.Model):
-    order = models.ForeignKey(to = "Order", on_delete=models.CASCADE)
+    order = models.ForeignKey(to = "Order", on_delete=models.CASCADE, related_name="order_lines")
     service = models.ForeignKey(to = "Service", on_delete=models.SET_NULL, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)
 
