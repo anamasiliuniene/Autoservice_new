@@ -25,6 +25,12 @@ class Car(models.Model):
 
 
 class Order(models.Model):
+    car = models.ForeignKey("Car",
+                            on_delete=models.SET_NULL,
+                            null=True, blank=True,
+                            related_name="orders")
+    date = models.DateTimeField(auto_now_add=True)
+
     STATUS_CHOICES = [
         ("open", "Open"),
         ("in_progress", "In progress"),

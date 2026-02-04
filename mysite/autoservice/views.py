@@ -3,6 +3,7 @@ from django.views import generic
 
 from .models import Car, Service, Order
 from django.views.generic import ListView, DetailView
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -18,8 +19,12 @@ def index(request):
 
 
 def cars(request):
+    cars = Car.objects.all()
+    paginator = Paginator(cars, 3)
+    page_number = request.GET.get('page')
+    paged_cars = paginator.get_page(page_number)
     context = {
-        "cars": Car.objects.all
+        "cars": paged_cars,
     }
     return render(request, 'autoservice/cars.html', context=context)
 
@@ -35,6 +40,7 @@ class OrderListView(ListView):
     model = Order
     template_name = 'autoservice/orders.html'
     context_object_name = 'orders'
+    paginate_by = 3
 
 
 class OrderDetailView(generic.DetailView):

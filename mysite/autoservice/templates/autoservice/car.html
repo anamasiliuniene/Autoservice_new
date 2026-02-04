@@ -1,6 +1,6 @@
 {% extends "autoservice/base.html" %}
 
-{% block heading %} "{{ car }} {% endblock heading %}
+{% block heading %} {{ car }} {% endblock heading %}
 
 {% block content %}
 <h1><b> Car info: </b></h1>
@@ -9,4 +9,11 @@
 <p> License plate: {{ car.license_plate }} </p>
 <p> VIN: {{ car.vin_code }} </p>
 <hr>
+<h3>Orders: </h3>
+{% for order in car.orders.all %}
+<a href="{% url 'order' order.pk %}">{{ order.date }} - {{ order.status }}</a>
+{% empty %}
+<p> No orders </p>
+<br>
+{% endfor %}
 {% endblock %}
