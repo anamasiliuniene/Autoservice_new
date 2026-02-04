@@ -4,6 +4,7 @@ from django.views import generic
 from .models import Car, Service, Order
 from django.views.generic import ListView, DetailView
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 # Create your views here.
@@ -41,9 +42,27 @@ class OrderListView(ListView):
     template_name = 'autoservice/orders.html'
     context_object_name = 'orders'
     paginate_by = 3
+    ordering = ['-id']  # newest first
 
 
 class OrderDetailView(generic.DetailView):
     model = Order
     template_name = 'autoservice/order.html'
     context_object_name = 'order'
+
+
+def search(request):
+    query = request.GET.get('query', '').strip()
+
+    if query:
+        cars = Car.objects.filter(
+            Q(client_name__icontains=query) |  # savininkas
+            Q(make__icontains=query) |  # markė
+            Q(model__icontains=query) |  # modelis
+            Q(license_plate__icontains=query) |  # valstybinis numeris
+            Q(vin_code__icontains=query)  # VIN kodas
+        )
+    else:
+        cars = Car.objects.none()
+
+    return render(request, 'autoservice/search.html', {'cars': cars, 'query': query})

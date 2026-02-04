@@ -11,7 +11,10 @@
 .hero-small p.lead {
     font-size: 1rem; /* smaller tagline */
 }
-
+form[role="search"] {
+    position: relative;
+    z-index: 1050; /* higher than navbar if needed */
+}
 /* Body text */
 body {
     font-family: 'Open Sans', sans-serif;
@@ -22,8 +25,9 @@ body {
 /* Hero / Logo / Navbar Brand */
 h1.display-4,
 .navbar-brand {
-    font-family: 'Bungee', sans-serif; text-light
-    font-weight: 400; /* Bungee is already bold by default */
+    font-family: 'Bungee', sans-serif;
+    color: #f8f9fa; /* light text */
+    font-weight: 400; /* Bungee is already bold */
 }
 
 /* Navbar background & text */
