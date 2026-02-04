@@ -1,3 +1,4 @@
+
 /* Smaller Hero Section */
 .hero-small {
     padding: 2rem 1rem; /* reduce top/bottom and sides */
@@ -21,7 +22,7 @@ body {
 /* Hero / Logo / Navbar Brand */
 h1.display-4,
 .navbar-brand {
-    font-family: 'Bungee', sans-serif;
+    font-family: 'Bungee', sans-serif; text-light
     font-weight: 400; /* Bungee is already bold by default */
 }
 
@@ -41,9 +42,10 @@ h1.display-4,
     color: #000;
 }
 
-/* Specific links bold: STATS, HOME */
+/* Specific links bold: STATS, CARS, ORDERS */
 .navbar-custom .nav-link.stats-link,
-.navbar-custom .nav-link.home-link {
+.navbar-custom .nav-link.home-cars,
+.navbar-custom .nav-link.home-orders{
     font-weight: bold;
 }
 

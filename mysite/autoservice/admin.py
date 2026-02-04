@@ -19,18 +19,23 @@ class OrderLineInline(admin.TabularInline):
     fields = ("service", "quantity", "line_sum")
     autocomplete_fields = ("service",)
 
-    def line_sum(self, obj):
-        return obj.quantity * obj.service.unit_price if obj.service else 0
-    line_sum.short_description = "Total (€)"
+    def total_display(self, obj):
+        return obj.total
+
+    total_display.short_description = "Total (€)"
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['get_car', 'date', 'status', 'total_cost']
+    list_display = ['get_car', 'date', 'status', 'total_display']
     list_editable = ['status']
     list_filter = ['status', 'date', 'car']
     search_fields = ['car__license_plate', 'car__client_name']
     inlines = [OrderLineInline]
 
+    def total_display(self, obj):
+        return obj.total
+
+    total_display.short_description = "Total (€)"
 
     def get_car(self, obj):
         return obj.car.short_name() if obj.car else None

@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.expressions import result
+from decimal import Decimal
 
 
 # Create your models here.
@@ -12,6 +13,7 @@ class Car(models.Model):
 
     def short_name(self):
         return f"{self.make} {self.model}"
+
     short_name.short_description = "Car"
 
     def __str__(self):
@@ -21,6 +23,7 @@ class Car(models.Model):
         verbose_name_plural = "Cars"
         verbose_name = "Car"
 
+
 class Order(models.Model):
     STATUS_CHOICES = [
         ("open", "Open"),
@@ -28,25 +31,36 @@ class Order(models.Model):
         ("done", "Done"),
     ]
 
+    @property
+    def status_color(self):
+        return {
+            "open": "primary",
+            "in_progress": "warning",
+            "done": "success",
+        }.get(self.status, "secondary")
+
     date = models.DateTimeField(auto_now_add=True)
-    car = models.ForeignKey(to = "Car", on_delete=models.SET_NULL, null=True, blank=True)
+    car = models.ForeignKey(to="Car",
+                            on_delete=models.SET_NULL,
+                            null=True, blank=True,
+                            related_name="orders")
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default="open"
     )
-    def total_cost(self):
-        result = 0
-        for line in self.order_lines.all():
-            result += line.service.unit_price * line.quantity
-        return result
+
+    @property
+    def total(self):
+        return sum(line.line_sum for line in self.lines.all())
 
     def __str__(self):
-        return f" {self.car} - ({self.date:%Y-%m-%d}) - {self.status} - {self.total_cost()}"
+        return f"Order #{self.id} - {self.total} €"
 
     class Meta:
         verbose_name_plural = "Orders"
         verbose_name = "Order"
+
 
 class Service(models.Model):
     name = models.CharField(max_length=100)
@@ -59,11 +73,17 @@ class Service(models.Model):
         verbose_name_plural = "Services"
         verbose_name = "Service"
 
+
 class OrderLine(models.Model):
-    order = models.ForeignKey(to = "Order", on_delete=models.CASCADE, related_name="order_lines")
-    service = models.ForeignKey(to = "Service", on_delete=models.SET_NULL, null=True, blank=True)
+    order = models.ForeignKey("Order", on_delete=models.CASCADE, related_name="lines")
+    service = models.ForeignKey("Service", on_delete=models.SET_NULL, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)
 
+    @property
+    def line_sum(self):
+        if self.service is not None and self.service.unit_price is not None:
+            return self.quantity * self.service.unit_price
+        return Decimal("0.00")
 
     def __str__(self):
         return f"{self.service.name} - {self.quantity} ({self.service.unit_price} €)"
@@ -71,9 +91,3 @@ class OrderLine(models.Model):
     class Meta:
         verbose_name_plural = "Order Lines"
         verbose_name = "Order Line"
-
-    @property
-    def line_sum(self):
-        if self.service:
-            return self.quantity * self.service.unit_price
-        return 0

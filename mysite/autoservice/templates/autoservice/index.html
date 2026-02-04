@@ -1,12 +1,19 @@
 {% extends "autoservice/base.html" %}
 
-{% block title%} STATS {% endblock %}
+{% block heading %}
+    Stats
+{% endblock heading %}
 
 {% block content %}
-<h1>Stats</h1>
+<h1> STATS </h1>
 <p> Number of services: {{ num_services }}</p>
+<hr>
 <p> Number of cars registered: {{ num_cars }}</p>
+<hr>
 <p> Number of orders completed: {{ num_order_done }}</p>
+<hr>
 <p> Number of orders in progress: {{ num_order_in_progress }}</p>
+<hr>
 <p> Number of orders in queue: {{ num_order_open }}</p>
+<hr>
 {% endblock %}

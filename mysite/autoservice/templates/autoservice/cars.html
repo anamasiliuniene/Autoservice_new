@@ -1,0 +1,14 @@
+{% extends "autoservice/base.html" %}
+
+{% block heading %} <b>Cars </b> {% endblock heading %}
+
+{% block content %}
+<h1>CARS</h1>
+<hr>
+{% for car in cars %}
+<p> <a href="{% url 'car' car.pk %}" > {{ car.license_plate }} </a> </p>
+<hr>
+{% endfor %}
+
+{% endblock %}
+
