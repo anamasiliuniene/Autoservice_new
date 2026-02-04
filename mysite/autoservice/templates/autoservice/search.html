@@ -9,20 +9,25 @@ Search results:
 <h1>Search results</h1>
 
 {% if cars %}
-    <div class="row">
+<div class="row">
     {% for car in cars %}
-        <div class="col-md-4 mb-3">
-            <div class="card p-3">
-                <h5>{{ car.make }} {{ car.model }}</h5>
-                <p><strong>Owner:</strong> {{ car.client_name }}</p>
-                <p><strong>License plate:</strong> {{ car.license_plate }}</p>
-                <p><strong>VIN:</strong> {{ car.vin_code }}</p>
-            </div>
+    <div class="col-md-4 mb-3">
+        <div class="card p-3">
+            <!-- Make only the car name clickable -->
+            <h5>
+                <a href="{% url 'car' car.pk %}" class="text-decoration-none">
+                    {{ car.make }} {{ car.model }}
+                </a>
+            </h5>
+            <p><strong>Owner:</strong> {{ car.client_name }}</p>
+            <p><strong>License plate:</strong> {{ car.license_plate }}</p>
+            <p><strong>VIN:</strong> {{ car.vin_code }}</p>
         </div>
-    {% endfor %}
     </div>
+    {% endfor %}
+</div>
 {% else %}
-    <p>Oops... Nothing found by request „{{ query }}“</p>
+<p>Oops... Nothing found by request „{{ query }}“</p>
 {% endif %}
 
 {% endblock %}

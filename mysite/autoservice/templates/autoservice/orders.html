@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h1> <b> Orders </b></h1>
+<h1>ORDERS</h1>
 <hr>
 {% for order in orders %}
 <p><a href="{% url 'order' order.pk %}"> {{ order.car.license_plate }}: {{ order.status }} </a></p>

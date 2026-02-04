@@ -10,6 +10,7 @@ class Car(models.Model):
     license_plate = models.CharField()
     vin_code = models.CharField("VIN", max_length=17, unique=True, default="UNKNOWNVIN00000000")
     client_name = models.CharField()
+    image = models.ImageField(upload_to="images", null=True, blank=True)
 
     def short_name(self):
         return f"{self.make} {self.model}"

@@ -1,19 +1,35 @@
 {% extends "autoservice/base.html" %}
-
+{% load static %}
 {% block heading %} {{ car }} {% endblock heading %}
 
 {% block content %}
-<h1><b> Car info: </b></h1>
-<p> Owner: {{ car.client_name }} </p>
-<p> Model: {{car.make}} {{ car.model }} </p>
-<p> License plate: {{ car.license_plate }} </p>
-<p> VIN: {{ car.vin_code }} </p>
-<hr>
-<h3>Orders: </h3>
-{% for order in car.orders.all %}
-<a href="{% url 'order' order.pk %}">{{ order.date }} - {{ order.status }}</a>
-{% empty %}
-<p> No orders </p>
-<br>
-{% endfor %}
+<h3>Car info:</h3>
+
+<div class="row">
+    <!-- Left column: Car details -->
+    <div class="col-md-8">
+        <p><b>Owner:</b> {{ car.client_name }}</p>
+        <p><b>Model:</b> {{ car.make }} {{ car.model }}</p>
+        <p><b>License plate:</b> {{ car.license_plate }}</p>
+        <p><b>VIN:</b> {{ car.vin_code }}</p>
+        <hr>
+        <h3>Orders:</h3>
+        {% for order in car.orders.all %}
+            <p>
+                <a href="{% url 'order' order.pk %}">{{ order.date }} - {{ order.status }}</a>
+            </p>
+        {% empty %}
+            <p>No orders</p>
+        {% endfor %}
+    </div>
+
+    <!-- Right column: Car image -->
+    <div class="col-md-4">
+        {% if car.image %}
+            <img src="{{ car.image.url }}" alt="{{ car.make }} {{ car.model }}" class="img-fluid rounded">
+        {% else %}
+            <img src="{% static 'images/No_Image_Available.jpg' %}" alt="No Image" class="img-fluid rounded">
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
