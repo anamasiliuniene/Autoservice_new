@@ -41,7 +41,7 @@ class Order(models.Model):
     @property
     def status_color(self):
         return {
-            "open": "primary",
+            "open": "secondary",
             "in_progress": "warning",
             "done": "success",
         }.get(self.status, "secondary")

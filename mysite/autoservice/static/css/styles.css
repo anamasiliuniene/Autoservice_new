@@ -1,4 +1,5 @@
 
+
 /* Smaller Hero Section */
 .hero-small {
     padding: 2rem 1rem; /* reduce top/bottom and sides */
@@ -31,6 +32,27 @@ body {
     font-family: 'Open Sans', sans-serif;
     font-weight: 400;
     line-height: 1.6;
+}
+
+/* Global link style */
+a {
+    color: #30302f;           /* dark text color */
+    text-decoration: none;     /* remove underline by default */
+    transition: text-decoration 0.2s;  /* smooth underline on hover */
+}
+
+a:hover {
+    text-decoration: underline !important;
+}
+
+/* order buttons the same width */
+.order-btn {
+    display: inline-flex;             /* flexible box for text centering */
+    align-items: center;              /* vertical center */
+    justify-content: center;          /* horizontal center */
+    width: 260px;                     /* fixed width for all buttons */
+    white-space: nowrap;              /* prevent text wrapping */
+    text-align: center;               /* center text */
 }
 
 /* Hero / Logo / Navbar Brand */
@@ -79,6 +101,34 @@ h1.display-4,
 .logo-glow:hover {
     transform: scale(1.1);
     box-shadow: 0 0 30px #ffdd57;
+}
+
+/* Small pagination */
+.pagination.pagination-sm .page-link {
+    padding: 0.25rem 0.5rem;  /* smaller padding */
+    font-size: 0.8rem;        /* smaller text */
+}
+
+.pagination.pagination-sm .page-item {
+    margin: 0 2px;            /* tighter spacing */
+}
+.pagination .page-item .page-link {
+    border-radius: 8px;
+    margin: 0 3px;
+    color: #30302f !important;
+    border-color: #30302f !important;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #30302f !important;
+    color: #30302f !important;
+    border-color: #30302f !important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #30302f !important;
+    border-color: #30302f !important;
+    color: #ffffff !important;
 }
 
 /* Footer */

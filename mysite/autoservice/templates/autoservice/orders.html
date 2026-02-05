@@ -6,14 +6,19 @@
 
 <h1>ORDERS</h1>
 <hr>
+
 {% for order in orders %}
-<p><a href="{% url 'order' order.pk %}"> {{ order.car.license_plate }}: {{ order.status }} </a></p>
-<hr>
+<p>
+    <a href="{% url 'order' order.pk %}"
+       class="btn btn-{{ order.status_color }} btn-sm mb-2 order-btn">
+       # {{order.pk}}: {{ order.car.license_plate }} — {{ order.get_status_display }}
+    </a>
+</p>
 {% endfor %}
 
 <!--pagination -->
 {% if is_paginated %}
-<ul class="pagination justify-content-center">
+<ul class=" pagination pagination-sm justify-content-center">
     {% if page_obj.has_previous %}
     <li class="page-item">
         <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
