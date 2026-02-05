@@ -9,12 +9,16 @@ from django.db.models import Q
 
 # Create your views here.
 def index(request):
+    num_visits = request.session.get('num_visits', 1)
+    request.session['num_visits'] = num_visits + 1
     context = {
         "num_cars": Car.objects.count(),
         "num_services": Service.objects.count(),
         "num_order_done": Order.objects.filter(status='done').count(),
         "num_order_in_progress": Order.objects.filter(status='in_progress').count(),
         "num_order_open": Order.objects.filter(status='open').count(),
+        "num_visits": num_visits,
+
     }
     return render(request, 'autoservice/index.html', context=context)
 

@@ -31,38 +31,75 @@
     <p class="lead mb-0">We Keep You Rolling!</p>
 </div>
 
-<nav class="navbar navbar-expand-lg navbar-custom">
-    <div class="container-fluid">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-                <a class="nav-link stats-link" href="{% url 'index' %}">
-                    <i class="bi bi-bar-chart-fill me-1"></i> STATS
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'cars' %}">
-                    <i class="bi bi-car-front-fill me-1"></i> CARS
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'orders' %}">
-                    <i class="bi bi-tools me-1"></i> ORDERS
-                </a>
-            </li>
-        </ul>
 
-        <!-- Search form -->
-        <form class="d-flex" role="search" method="get" action="{% url 'search' %}" onsubmit="return this.query.value.trim() !== '';">
-            <input class="form-control me-2 flex-grow-1"
-                   type="text"
-                   name="query"
-                   placeholder="Search"
-                   autocomplete="off"
-                   value="{{ query|default:'' }}">
-            <button class="btn btn-outline-dark" type="submit">Search</button>
-        </form>
+<nav class="navbar navbar-expand-lg navbar-warning bg-warning">
+  <div class="container-fluid">
+
+<!-- TOGGLER + SEARCH ICON: right side on small screens -->
+<div class="d-flex ms-auto align-items-center">
+  <!-- Search icon -->
+  <a href="#" onclick="document.getElementById('mobileSearch').classList.toggle('d-none'); return false;" class="text-dark me-2">
+    <i class="bi bi-search" style="font-size: 1.2rem;"></i>
+  </a>
+
+  <!-- Toggler button -->
+  <button class="navbar-toggler p-1" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" style="font-size: 0.8rem;">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</div>
+
+<!-- Hidden mobile search input (appears when icon clicked) -->
+<form id="mobileSearch" class="d-none my-2 me-3" role="search" method="get" action="{% url 'search' %}">
+  <input class="form-control form-control-sm" type="text" name="query" placeholder="Search" autocomplete="off" value="{{ query|default:'' }}">
+</form>
+
+    <!-- COLLAPSIBLE CONTENT -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+
+      <!-- LEFT NAV + AUTH -->
+      <ul class="navbar-nav me-auto align-items-center">
+
+        <!-- Main links -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'index' %}"><i class="bi bi-bar-chart-fill me-1"></i> STATS</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'cars' %}"><i class="bi bi-car-front-fill me-1"></i> CARS</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'orders' %}"><i class="bi bi-tools me-1"></i> ORDERS</a>
+        </li>
+      </ul>
+
+ <!-- User info / login/logout -->
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <span class="nav-link"><i class="bi bi-person-circle"></i> {{ user.username }}</span>
+        </li>
+        <li class="nav-item">
+          <form method="post" action="{% url 'logout' %}" class="d-inline ms-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-dark btn-sm">Logout</button>
+          </form>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="btn btn-outline-dark btn-sm ms-2" href="{% url 'login' %}">Login</a>
+        </li>
+        {% endif %}
+      </ul>
     </div>
+  </div>
 </nav>
+
+<script>
+function toggleSearch() {
+  const input = document.getElementById('searchInput');
+  input.classList.toggle('d-none');
+  if (!input.classList.contains('d-none')) input.focus();
+}
+</script>
 
 <!-- Main Content -->
 <div class="container mt-5">

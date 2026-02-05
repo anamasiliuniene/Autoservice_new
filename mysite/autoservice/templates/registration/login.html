@@ -1,0 +1,18 @@
+{% extends "autoservice/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <h2 class="mb-4 text-center">Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form|crispy }}   <!-- this uses bootstrap5/uni_form.html -->
+            <button type="submit" class="btn btn-warning w-100">Log in</button>
+        </form>
+        <p><a href="{% url 'password_reset' %}" class="btn btn-link w-100">Forgot password?</a></p>
+    </div>
+</div>
+{% endblock %}
