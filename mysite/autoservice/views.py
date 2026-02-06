@@ -5,6 +5,7 @@ from .models import Car, Service, Order
 from django.views.generic import ListView, DetailView
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Create your views here.
@@ -70,3 +71,12 @@ def search(request):
         cars = Car.objects.none()
 
     return render(request, 'autoservice/search.html', {'cars': cars, 'query': query})
+
+
+class MyOrderListView(LoginRequiredMixin, generic.ListView):
+    model = Order
+    template_name = "my_orders.html"
+    context_object_name = "orders"
+
+    def get_queryset(self):
+        return Order.objects.filter(owner=self.request.user)

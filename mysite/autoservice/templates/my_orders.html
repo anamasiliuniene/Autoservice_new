@@ -1,0 +1,10 @@
+{% extends "autoservice/base.html" %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<h3><b>My Orders:</b></h3>
+{% for order in orders %}
+<p class="{% if order.is_overdue %}text-danger{% endif %}">{{ order.order }} ({{ order.car }})</p>
+{% endfor %}
+{% endblock %}

@@ -26,21 +26,25 @@ class OrderLineInline(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['get_car', 'date', 'status', 'total_display']
-    list_editable = ['status']
-    list_filter = ['status', 'date', 'car']
-    search_fields = ['car__license_plate', 'car__client_name']
+    list_display = ['get_car', 'owner', 'date', 'status', 'due_back', 'total_display']
+    list_editable = ['status', 'due_back']
+    list_filter = ['status', 'due_back', 'owner']
+    search_fields = ['car__license_plate', 'owner__username']  # use owner__username if owner is FK to User
     inlines = [OrderLineInline]
 
-    def total_display(self, obj):
-        return obj.total
+    # Corrected fieldsets: remove 'license_plate', use only real fields on Order
+    fieldsets = [
+        ('General', {'fields': ('car', 'status', 'owner')}),
+        ('Due Back', {'fields': ('due_back',)}),
+    ]
 
+    def total_display(self, obj):
+        return obj.total  # make sure Order has a 'total' property or method
     total_display.short_description = "Total (€)"
 
     def get_car(self, obj):
         return obj.car.short_name() if obj.car else None
     get_car.short_description = "Car"
-
 
 class OrderLineAdmin(admin.ModelAdmin):
     list_display = ['get_order_car', 'get_order_status', 'service', 'quantity', 'line_sum']

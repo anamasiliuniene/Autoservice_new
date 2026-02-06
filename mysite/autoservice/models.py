@@ -1,7 +1,8 @@
 from django.db import models
 from django.db.models.expressions import result
 from decimal import Decimal
-
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
 class Car(models.Model):
@@ -31,6 +32,10 @@ class Order(models.Model):
                             null=True, blank=True,
                             related_name="orders")
     date = models.DateTimeField(auto_now_add=True)
+    due_back = models.DateField(null=True, blank=True)
+    owner = models.ForeignKey(to=User, verbose_name="Owner",
+                              on_delete=models.SET_NULL,
+                              null=True, blank=True)
 
     STATUS_CHOICES = [
         ("open", "Open"),
@@ -56,6 +61,9 @@ class Order(models.Model):
         choices=STATUS_CHOICES,
         default="open"
     )
+
+    def is_overdue(self):
+        return self.due_back and timezone.now().date() > self.due_back
 
     @property
     def total(self):
