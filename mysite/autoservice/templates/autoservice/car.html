@@ -1,7 +1,7 @@
 {% extends "autoservice/base.html" %}
 {% load static %}
 {% block heading %} {{ car }} {% endblock heading %}
-
+<p>{{ car.description | safe }}</p>
 {% block content %}
 <h3>Car info:</h3>
 

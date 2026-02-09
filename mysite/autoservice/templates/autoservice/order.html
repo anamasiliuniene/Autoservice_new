@@ -1,14 +1,18 @@
 {% extends "autoservice/base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
 {% block heading %} "{{ order.id }} {% endblock heading %}
 
 {% block content %}
 <h1><b> Order info: </b></h1>
 <hr>
+<p> Manager: {{ order.manager }} </p>
+<p> Date created: {{order.date}} </p>
 <p> Car: {{ order.car.make }} {{ order.car.model }} </p>
 <p> License plate: {{ order.car.license_plate }} </p>
-<p> Date: {{order.date}} </p>
 <p> Status: {{ order.get_status_display }} </p>
+<p> Due back: {{order.due_back}}</p>
 
 
 <div class="container mt-3">
@@ -42,5 +46,27 @@
         </tbody>
     </table>
 </div>
+
+<h2>Reviews:</h2>
+<br/>
+{% if order.reviews.all %}
+    {% for review in order.reviews.all %}
+        <p><strong>{{ review.reviewer }}</strong>, <em>{{ review.date_created }}</em></p>
+        <p>{{ review.content }}</p>
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>No reviews available</p>
+{% endif %}
+
+{% if user.is_authenticated %}
+<h2>Reviews</h2>
+<form method="post" class="mb-2">
+    {% csrf_token %}
+    {% load crispy_forms_tags %}
+    {{ form | crispy }}
+    <button type="submit" class="btn btn-warning">Submit</button>
+</form>
+{% endif %}
 
 {% endblock %}

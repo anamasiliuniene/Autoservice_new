@@ -55,6 +55,28 @@ a:hover {
     text-align: center;               /* center text */
 }
 
+/* Small input / textarea */
+input.form-control,
+textarea.form-control {
+    font-size: 0.9rem;          /* slightly smaller text */
+    padding: 0.25rem 0.5rem;    /* smaller padding */
+    border-radius: 0.3rem;      /* slightly rounded */
+}
+
+/* Override Bootstrap focus/hover blue */
+input.form-control:focus,
+textarea.form-control:focus,
+select.form-select:focus {
+    border-color: #6c757d !important;      /* gray border */
+    box-shadow: 0 0 0 0.2rem rgba(108,117,125,0.25) !important; /* subtle gray shadow */
+}
+
+input.form-control:hover,
+textarea.form-control:hover,
+select.form-select:hover {
+    border-color: #6c757d !important;      /* gray on hover */
+}
+
 /* Hero / Logo / Navbar Brand */
 h1.display-4,
 .navbar-brand {

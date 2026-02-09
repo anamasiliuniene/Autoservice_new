@@ -3,8 +3,16 @@
 {% block title %}My Orders{% endblock %}
 
 {% block content %}
-<h3><b>My Orders:</b></h3>
+<h5><b>Due back:</b></h5>
+
 {% for order in orders %}
-<p class="{% if order.is_overdue %}text-danger{% endif %}">{{ order.order }} ({{ order.car }})</p>
+<p class="{% if order.is_overdue %}text-danger{% endif %}">
+    <a href="{% url 'order' order.pk %}"
+       class="{% if order.is_overdue %}text-danger fw-bold{% else %}text-dark{% endif %}">
+        Order No {{ order.pk }}
+    </a>:
+    {{ order.car }} - {{order.due_back}}
+</p>
 {% endfor %}
+
 {% endblock %}

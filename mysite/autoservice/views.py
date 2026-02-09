@@ -1,11 +1,14 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, reverse
 from django.views import generic
-
 from .models import Car, Service, Order
 from django.views.generic import ListView, DetailView
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from .forms import OrderReviewForm
+from django.views.generic.edit import FormMixin
 
 
 # Create your views here.
@@ -50,11 +53,31 @@ class OrderListView(ListView):
     ordering = ['-id']  # newest first
 
 
-class OrderDetailView(generic.DetailView):
+class OrderDetailView(FormMixin, generic.DetailView):
     model = Order
     template_name = 'autoservice/order.html'
     context_object_name = 'order'
+    form_class = OrderReviewForm
 
+# nurodome, kur atsidursime komentaro sėkmės atveju.
+    def get_success_url(self):
+        return reverse("order", kwargs={"pk": self.object.id})
+
+    # standartinis post metodo perrašymas, naudojant FormMixin, galite kopijuoti tiesiai į savo projektą.
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    # štai čia nurodome, kad knyga bus būtent ta, po kuria komentuojame, o vartotojas bus tas, kuris yra prisijungęs.
+    def form_valid(self, form):
+        form.instance.order = self.get_object()
+        form.instance.reviewer = self.request.user
+        form.save()
+        return super().form_valid(form)
 
 def search(request):
     query = request.GET.get('query', '').strip()
@@ -79,4 +102,9 @@ class MyOrderListView(LoginRequiredMixin, generic.ListView):
     context_object_name = "orders"
 
     def get_queryset(self):
-        return Order.objects.filter(owner=self.request.user)
+        return Order.objects.filter(manager=self.request.user)
+
+class SignUpView(generic.CreateView):
+    form_class = UserCreationForm
+    template_name = 'autoservice/signup.html'
+    success_url = reverse_lazy('login')

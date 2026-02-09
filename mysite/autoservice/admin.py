@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Car, Order, Service, OrderLine
+from .models import Car, Order, Service, OrderLine, OrderReview
 
 
 class CarAdmin(admin.ModelAdmin):
@@ -9,6 +9,7 @@ class CarAdmin(admin.ModelAdmin):
 
     def short_name(self, obj):
         return f"{obj.make} {obj.model}"
+
     short_name.short_description = "Car"
 
 
@@ -26,25 +27,28 @@ class OrderLineInline(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['get_car', 'owner', 'date', 'status', 'due_back', 'total_display']
+    list_display = ['get_car', 'manager', 'date', 'status', 'due_back', 'total_display']
     list_editable = ['status', 'due_back']
-    list_filter = ['status', 'due_back', 'owner']
-    search_fields = ['car__license_plate', 'owner__username']  # use owner__username if owner is FK to User
+    list_filter = ['status', 'due_back', 'manager']
+    search_fields = ['car__license_plate', 'manager__username']  # use managers__username if manager is FK to User
     inlines = [OrderLineInline]
 
     # Corrected fieldsets: remove 'license_plate', use only real fields on Order
     fieldsets = [
-        ('General', {'fields': ('car', 'status', 'owner')}),
+        ('General', {'fields': ('car', 'status', 'manager')}),
         ('Due Back', {'fields': ('due_back',)}),
     ]
 
     def total_display(self, obj):
         return obj.total  # make sure Order has a 'total' property or method
+
     total_display.short_description = "Total (€)"
 
     def get_car(self, obj):
         return obj.car.short_name() if obj.car else None
+
     get_car.short_description = "Car"
+
 
 class OrderLineAdmin(admin.ModelAdmin):
     list_display = ['get_order_car', 'get_order_status', 'service', 'quantity', 'line_sum']
@@ -54,15 +58,24 @@ class OrderLineAdmin(admin.ModelAdmin):
 
     def get_order_car(self, obj):
         return obj.order.car.short_name() if obj.order and obj.order.car else None
+
     get_order_car.short_description = "Car"
 
     def get_order_status(self, obj):
         return obj.order.status if obj.order else None
+
     get_order_status.short_description = "Order Status"
 
     def line_sum(self, obj):
         return obj.quantity * obj.service.unit_price if obj.service else 0
+
     line_sum.short_description = "Total (€)"
+
+
+class OrderReviewAdmin(admin.ModelAdmin):
+    list_display = ['order', 'date_created', 'reviewer', 'content']
+
+admin.site.register(OrderReview, OrderReviewAdmin)
 
 
 class ServiceAdmin(admin.ModelAdmin):
@@ -71,10 +84,12 @@ class ServiceAdmin(admin.ModelAdmin):
 
     def total_quantity(self, obj):
         return sum(ol.quantity for ol in obj.orderline_set.all())
+
     total_quantity.short_description = "Total Quantity"
 
     def total_revenue(self, obj):
         return sum(ol.quantity * ol.service.unit_price for ol in obj.orderline_set.all())
+
     total_revenue.short_description = "Revenue (€)"
 
 

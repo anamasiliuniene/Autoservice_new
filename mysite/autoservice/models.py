@@ -3,6 +3,7 @@ from django.db.models.expressions import result
 from decimal import Decimal
 from django.contrib.auth.models import User
 from django.utils import timezone
+from tinymce.models import HTMLField
 
 # Create your models here.
 class Car(models.Model):
@@ -12,6 +13,7 @@ class Car(models.Model):
     vin_code = models.CharField("VIN", max_length=17, unique=True, default="UNKNOWNVIN00000000")
     client_name = models.CharField()
     image = models.ImageField(upload_to="images", null=True, blank=True)
+    description = HTMLField(verbose_name="Description", max_length=3000, default="")
 
     def short_name(self):
         return f"{self.make} {self.model}"
@@ -31,12 +33,6 @@ class Order(models.Model):
                             on_delete=models.SET_NULL,
                             null=True, blank=True,
                             related_name="orders")
-    date = models.DateTimeField(auto_now_add=True)
-    due_back = models.DateField(null=True, blank=True)
-    owner = models.ForeignKey(to=User, verbose_name="Owner",
-                              on_delete=models.SET_NULL,
-                              null=True, blank=True)
-
     STATUS_CHOICES = [
         ("open", "Open"),
         ("in_progress", "In progress"),
@@ -51,19 +47,26 @@ class Order(models.Model):
             "done": "success",
         }.get(self.status, "secondary")
 
-    date = models.DateTimeField(auto_now_add=True)
     car = models.ForeignKey(to="Car",
                             on_delete=models.SET_NULL,
                             null=True, blank=True,
                             related_name="orders")
+    date = models.DateTimeField(auto_now_add=True)
+    due_back = models.DateTimeField(null=True, blank=True)
+    manager = models.ForeignKey(to=User, verbose_name="Manager",
+                              on_delete=models.SET_NULL,
+                              null=True, blank=True)
+
+
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default="open"
     )
 
+    @property
     def is_overdue(self):
-        return self.due_back and timezone.now().date() > self.due_back
+        return bool(self.due_back and timezone.now() > self.due_back)
 
     @property
     def total(self):
@@ -76,6 +79,16 @@ class Order(models.Model):
         verbose_name_plural = "Orders"
         verbose_name = "Order"
 
+class OrderReview(models.Model):
+    order = models.ForeignKey(to="Order", verbose_name="Order", on_delete=models.SET_NULL, null=True, blank=True, related_name="reviews")
+    reviewer = models.ForeignKey(to=User, verbose_name="Reviewer", on_delete=models.SET_NULL, null=True, blank=True)
+    date_created = models.DateTimeField(verbose_name="Date Created", auto_now_add=True)
+    content = models.TextField(verbose_name="Content", max_length=2000)
+
+    class Meta:
+        verbose_name = "Order Review"
+        verbose_name_plural = 'Order Reviews'
+        ordering = ['-date_created']
 
 class Service(models.Model):
     name = models.CharField(max_length=100)
