@@ -1,0 +1,130 @@
+{% extends "autoservice/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edit Order{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2>
+        Order #{{ object.id }}
+        <span class="badge bg-{{ object.status_color }}">
+            {{ object.get_status_display }}
+        </span>
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Order main form -->
+        {{ form|crispy }}
+
+        <hr>
+
+        <!-- Existing Services -->
+        <h4>Services</h4>
+
+        {{ lines.management_form }}
+
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+            <tr>
+                <th>Service</th>
+                <th>Unit Price (€)</th>
+                <th>Quantity</th>
+                <th>Total (€)</th>
+                <th>Delete</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for line_form in lines %}
+            <tr>
+                <td>
+                    {{ line_form.service|as_crispy_field }}
+                </td>
+
+                <td>
+                    {% if line_form.instance.service %}
+                    {{ line_form.instance.service.unit_price }}
+                    {% else %}
+                    0.00
+                    {% endif %}
+                </td>
+
+                <td>
+                    {{ line_form.quantity|as_crispy_field }}
+                </td>
+
+                <td>
+                    {{ line_form.instance.line_sum }}
+                </td>
+
+                <td class="text-center">
+                    {{ line_form.DELETE }}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+
+            <tfoot>
+            <tr class="table-secondary">
+                <th colspan="3" class="text-end">
+                    Order Total:
+                </th>
+                <th>
+                    {{ object.total }} €
+                </th>
+                <th></th>
+            </tr>
+            </tfoot>
+        </table>
+        <hr>
+
+        <!--&lt;!&ndash;        &lt;!&ndash; Add Service &ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;        <h4>Add Service</h4>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;        <div class="row mb-3">&ndash;&gt;-->
+        <!--&lt;!&ndash;            <div class="col-md-6">&ndash;&gt;-->
+        <!--&lt;!&ndash;                <label class="form-label">Service</label>&ndash;&gt;-->
+        <!--&lt;!&ndash;                <select name="new_service" class="form-select">&ndash;&gt;-->
+        <!--&lt;!&ndash;                    <option value="">&#45;&#45; Select service &#45;&#45;</option>&ndash;&gt;-->
+        <!--&lt;!&ndash;                    {% for service in all_services %}&ndash;&gt;-->
+        <!--&lt;!&ndash;                        <option value="{{ service.id }}">&ndash;&gt;-->
+        <!--&lt;!&ndash;                            {{ service.name }} ({{ service.unit_price }} €)&ndash;&gt;-->
+        <!--&lt;!&ndash;                        </option>&ndash;&gt;-->
+        <!--&lt;!&ndash;                    {% endfor %}&ndash;&gt;-->
+        <!--&lt;!&ndash;                </select>&ndash;&gt;-->
+        <!--&lt;!&ndash;            </div>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;            <div class="col-md-2">&ndash;&gt;-->
+        <!--&lt;!&ndash;                <label class="form-label">Quantity</label>&ndash;&gt;-->
+        <!--&lt;!&ndash;                <input type="number"&ndash;&gt;-->
+        <!--&lt;!&ndash;                       name="new_quantity"&ndash;&gt;-->
+        <!--&lt;!&ndash;                       value="1"&ndash;&gt;-->
+        <!--&lt;!&ndash;                       min="1"&ndash;&gt;-->
+        <!--&lt;!&ndash;                       class="form-control">&ndash;&gt;-->
+        <!--&lt;!&ndash;            </div>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;            <div class="col-md-4 d-flex align-items-end">&ndash;&gt;-->
+        <!--&lt;!&ndash;                <button type="submit"&ndash;&gt;-->
+        <!--&lt;!&ndash;                        name="add_service"&ndash;&gt;-->
+        <!--&lt;!&ndash;                        class="btn btn-success w-100">&ndash;&gt;-->
+        <!--&lt;!&ndash;                    Add Service&ndash;&gt;-->
+        <!--&lt;!&ndash;                </button>&ndash;&gt;-->
+        <!--&lt;!&ndash;            </div>&ndash;&gt;-->
+        <!--&lt;!&ndash;        </div>&ndash;&gt;-->
+
+        <!--&lt;!&ndash;        <hr>&ndash;&gt;-->
+
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'order_list' %}" class="btn btn-secondary">
+                Cancel
+            </a>
+            <button type="submit" class="btn btn-primary">
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

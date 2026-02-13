@@ -1,0 +1,89 @@
+{% extends "autoservice/base.html" %}
+
+{% block title %}Manage{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-end mb-4">
+        <a href="{% url 'order_create' %}" class="btn btn-warning btn-lg">
+            + New Order
+        </a>
+    </div>
+
+    <div class="row">
+
+        {% for order in orders %}
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow h-100">
+
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-3">
+                        Order #{{ order.id }}
+                    </h5>
+
+                    <p>
+                        <strong>Car:</strong><br>
+                        {{ order.car.license_plate }}<br>
+                        {{ order.car.client_name }}
+                    </p>
+
+                    <p>
+                        <strong>Manager:</strong><br>
+                        {{ order.manager.get_full_name }}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+                        {{ order.get_status_display }}
+                    </p>
+                </div>
+
+                <div class="card-footer d-flex justify-content-between">
+                    <a href="{% url 'order_detail' order.pk %}" class="btn btn-secondary btn-sm">View</a>
+                    <a href="{% url 'order_update' order.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'order_delete' order.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>No orders found.</p>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% if is_paginated %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+
+        </ul>
+    </nav>
+    {% endif %}
+
+</div>
+
+{% endblock %}

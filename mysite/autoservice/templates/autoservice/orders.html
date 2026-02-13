@@ -9,7 +9,7 @@
 
 {% for order in orders %}
 <p>
-    <a href="{% url 'order' order.pk %}"
+    <a href="{% url 'public_order_detail' order.pk %}"
        class="btn btn-{{ order.status_color }} btn-sm mb-2 order-btn">
        # {{order.pk}}: {{ order.car.license_plate }} — {{ order.get_status_display }}
     </a>

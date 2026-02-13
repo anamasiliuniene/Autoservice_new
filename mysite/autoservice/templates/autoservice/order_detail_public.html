@@ -1,0 +1,45 @@
+{% extends "autoservice/base.html" %}
+{% load static %}
+
+{% block heading %} Order #{{ order.id }} {% endblock %}
+
+{% block content %}
+<h1><b>Order info</b></h1>
+<hr>
+<p>Manager: {{ order.manager }}</p>
+<p>Date created: {{ order.date }}</p>
+<p>Car: {{ order.car.make }} {{ order.car.model }}</p>
+<p>License plate: {{ order.car.license_plate }}</p>
+<p>Status: {{ order.get_status_display }}</p>
+<p>Due back: {{ order.due_back }}</p>
+
+<h2>Services</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Service</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Sum</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for line in order.lines.all %}
+        <tr>
+            <td>{{ line.service.name }}</td>
+            <td>{{ line.service.unit_price }}</td>
+            <td>{{ line.quantity }}</td>
+            <td>{{ line.line_sum }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No services added to this order.</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <th colspan="3">Total</th>
+            <th>{{ order.total|floatformat:2 }}</th>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

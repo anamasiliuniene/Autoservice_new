@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Car, Order, Service, OrderLine, OrderReview
-
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser
 
 class CarAdmin(admin.ModelAdmin):
     list_display = ['short_name', 'client_name', 'license_plate', 'vin_code']
@@ -92,8 +93,13 @@ class ServiceAdmin(admin.ModelAdmin):
 
     total_revenue.short_description = "Revenue (€)"
 
+class CustomUserAdmin(UserAdmin):
+    fieldsets = UserAdmin.fieldsets + (
+        ('Additional Info', {'fields': ('photo',)}),
+    )
 
 admin.site.register(Car, CarAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderLine, OrderLineAdmin)
 admin.site.register(Service, ServiceAdmin)
+admin.site.register(CustomUser, CustomUserAdmin)

@@ -1,0 +1,26 @@
+{% extends "autoservice/base.html" %}
+{% block title %}
+    {% if object %}Edit Order #{{ object.pk }}{% else %}Create New Order{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <h2>
+        {% if object %}Edit Order #{{ object.pk }}{% else %}Create New Order{% endif %}
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Order main form -->
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary">
+            {% if object %}Save Changes{% else %}Create Order{% endif %}
+        </button>
+        <a href="{% url 'order_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+
+</div>
+{% endblock %}

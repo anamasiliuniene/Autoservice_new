@@ -16,7 +16,7 @@
         <h3>Orders:</h3>
         {% for order in car.orders.all %}
             <p>
-                <a href="{% url 'order' order.pk %}">{{ order.date }} - {{ order.status }}</a>
+                <a href="{% url 'public_order_detail' order.pk %}">{{ order.date }} - {{ order.status }}</a>
             </p>
         {% empty %}
             <p>No orders</p>

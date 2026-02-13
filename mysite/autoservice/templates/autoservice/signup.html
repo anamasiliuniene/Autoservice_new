@@ -11,7 +11,7 @@
                 {% csrf_token %}
                 {% load crispy_forms_tags %}
                 {{ form | crispy }}
-                <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                <button type="submit" class="btn btn-warning w-100">Sign Up</button>
             </form>
             <p><a href="{% url 'login' %}" class="btn btn-link w-100">Already Registered? Login</a></p>
         </div>

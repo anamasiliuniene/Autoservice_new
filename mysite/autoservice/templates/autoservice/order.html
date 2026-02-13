@@ -47,20 +47,33 @@
     </table>
 </div>
 
-<h2>Reviews:</h2>
+<h2>Reviews</h2>
 <br/>
 {% if order.reviews.all %}
-    {% for review in order.reviews.all %}
-        <p><strong>{{ review.reviewer }}</strong>, <em>{{ review.date_created }}</em></p>
-        <p>{{ review.content }}</p>
-        <hr>
-    {% endfor %}
+{% for review in order.reviews.all %}
+<p>
+    {% if review.reviewer.photo %}
+    <img src="{{ review.reviewer.photo.url }}"
+         class="rounded-circle"
+         style="width: 50px;
+                height: 50px;
+                object-fit: cover;
+                border: 1px solid #FFD700;
+                box-shadow: 0 0 12px 2px #FFD700;
+                transition: box-shadow 0.1s;" >
+    {% endif %}
+    <b>{{ review.reviewer }}</b>, <em>{{ review.date_created }}</em>
+
+</p>
+<p>{{ review.content }}</p>
+<hr>
+{% endfor %}
 {% else %}
-    <p>No reviews available</p>
+<p>No reviews available</p>
 {% endif %}
 
 {% if user.is_authenticated %}
-<h2>Reviews</h2>
+<h5><b>Add review</b></h5>
 <form method="post" class="mb-2">
     {% csrf_token %}
     {% load crispy_forms_tags %}

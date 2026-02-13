@@ -125,6 +125,27 @@ h1.display-4,
     box-shadow: 0 0 30px #ffdd57;
 }
 
+/* Reuse logo-glow for profile photo */
+.profile-photo {
+    display: block;
+    margin: 0 auto; /* center */
+    border-radius: 50%; /* round */
+}
+
+/* Profile photo styling */
+.profile-photo {
+    display: block;
+    margin: 0 auto;        /* center */
+    border-radius: 50%;    /* make round */
+    width: 120px;          /* same size as your logo */
+    height: 120px;         /* make square for circle */
+    object-fit: cover;     /* crop to fill circle */
+}
+
+.glow-yellow {
+    box-shadow: 0 0 8px 3px #FFD700; /* yellow glow */
+}
+
 /* Small pagination */
 .pagination.pagination-sm .page-link {
     padding: 0.25rem 0.5rem;  /* smaller padding */
